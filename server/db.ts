@@ -89,4 +89,111 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Parcel queries
+export async function getUserParcels(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const { parcels } = await import("../drizzle/schema");
+  return db.select().from(parcels).where(eq(parcels.userId, userId)).orderBy(parcels.createdAt);
+}
+
+export async function createParcel(parcel: typeof parcels.$inferInsert) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { parcels } = await import("../drizzle/schema");
+  const result = await db.insert(parcels).values(parcel);
+  return result;
+}
+
+export async function updateParcel(id: number, userId: number, data: Partial<typeof parcels.$inferInsert>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { parcels } = await import("../drizzle/schema");
+  const { and } = await import("drizzle-orm");
+  return db.update(parcels).set(data).where(and(eq(parcels.id, id), eq(parcels.userId, userId)));
+}
+
+export async function deleteParcel(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { parcels } = await import("../drizzle/schema");
+  const { and } = await import("drizzle-orm");
+  return db.delete(parcels).where(and(eq(parcels.id, id), eq(parcels.userId, userId)));
+}
+
+// Shipment queries
+export async function getUserShipments(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const { shipments } = await import("../drizzle/schema");
+  return db.select().from(shipments).where(eq(shipments.userId, userId)).orderBy(shipments.createdAt);
+}
+
+export async function createShipment(shipment: typeof shipments.$inferInsert) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { shipments } = await import("../drizzle/schema");
+  return db.insert(shipments).values(shipment);
+}
+
+// Project queries
+export async function getUserProjects(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const { projects } = await import("../drizzle/schema");
+  return db.select().from(projects).where(eq(projects.userId, userId)).orderBy(projects.createdAt);
+}
+
+export async function createProject(project: typeof projects.$inferInsert) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { projects } = await import("../drizzle/schema");
+  return db.insert(projects).values(project);
+}
+
+export async function updateProject(id: number, userId: number, data: Partial<typeof projects.$inferInsert>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { projects } = await import("../drizzle/schema");
+  const { and } = await import("drizzle-orm");
+  return db.update(projects).set(data).where(and(eq(projects.id, id), eq(projects.userId, userId)));
+}
+
+export async function deleteProject(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { projects } = await import("../drizzle/schema");
+  const { and } = await import("drizzle-orm");
+  return db.delete(projects).where(and(eq(projects.id, id), eq(projects.userId, userId)));
+}
+
+// Weekly Plan queries
+export async function getUserWeeklyPlans(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const { weeklyPlans } = await import("../drizzle/schema");
+  return db.select().from(weeklyPlans).where(eq(weeklyPlans.userId, userId)).orderBy(weeklyPlans.weekStartDate);
+}
+
+export async function createWeeklyPlan(plan: typeof weeklyPlans.$inferInsert) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { weeklyPlans } = await import("../drizzle/schema");
+  return db.insert(weeklyPlans).values(plan);
+}
+
+export async function updateWeeklyPlan(id: number, userId: number, data: Partial<typeof weeklyPlans.$inferInsert>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { weeklyPlans } = await import("../drizzle/schema");
+  const { and } = await import("drizzle-orm");
+  return db.update(weeklyPlans).set(data).where(and(eq(weeklyPlans.id, id), eq(weeklyPlans.userId, userId)));
+}
+
+export async function deleteWeeklyPlan(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { weeklyPlans } = await import("../drizzle/schema");
+  const { and } = await import("drizzle-orm");
+  return db.delete(weeklyPlans).where(and(eq(weeklyPlans.id, id), eq(weeklyPlans.userId, userId)));
+}
